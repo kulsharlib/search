@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ابحث في مكتبة الكلية!</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <body>
+
+    <img class="logo" src="logo.png" alt="Logo">
+
+    <div class="search-container">
+      <input type="text" id="search-input" type="text" placeholder="ابحث في المكتبة باسم الكتاب أو المؤلف...!" class="search-bar">
+      <div class="search-icon" onclick="performSearch()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8" stroke="currentColor" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" />
+        </svg>
+      </div>
+    </div>
+
+    <div id="results" class="results"></div>
+
+    <script src="search.js"></script>
+  </body>
+
+</html>
