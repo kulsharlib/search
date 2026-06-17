@@ -214,32 +214,44 @@ iframe{
 </div>
 
 <script>
+const users = [
+  {
+    mobile: "7219638796",
+    password: "Abdullah",
+    role: "Admin"
+  },
+  {
+    mobile: "8874311542",
+    password: "Zubair",
+    role: "Librarian"
+  }
+];
 
-// CHANGE THESE VALUES
-const librarianMobile = "8874311542";
-const librarianPassword = "8874311542";
+function login() {
 
-function login(){
+  const mobile =
+    document.getElementById("mobile").value.trim();
 
-    const mobile =
-        document.getElementById("mobile").value.trim();
+  const password =
+    document.getElementById("password").value.trim();
 
-    const password =
-        document.getElementById("password").value.trim();
+  const user = users.find(
+    u =>
+      u.mobile === mobile &&
+      u.password === password
+  );
 
-    if(
-        mobile === librarianMobile &&
-        password === librarianPassword
-    ){
+  if (user) {
 
-        document.getElementById("loginPage").style.display = "none";
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("portal").style.display = "block";
 
-        document.getElementById("portal").style.display = "block";
+    console.log("Logged in as:", user.role);
 
-    }else{
+  } else {
 
-        document.getElementById("errorMsg").style.display = "block";
-    }
+    document.getElementById("errorMsg").style.display = "block";
+  }
 }
 </script>
 
