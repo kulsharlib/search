@@ -1,259 +1,169 @@
+<!-- ...existing code... -->
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kulshar Library - Book Entry Portal</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>تحديث قاعدة البيانات لمكتبة الكلية</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Cairo',sans-serif;
-}
-
+/* Layout & background */
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+html,body{height:100%}
 body{
-    min-height:100vh;
-    background:url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1600') center center/cover no-repeat;
-    position:relative;
+  min-height:100vh;
+  background:url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1600') center/cover no-repeat;
+  position:relative;
+  color:#fff;
 }
 
+/* dark blur overlay that remains visible before/after login */
 body::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:rgba(15,23,42,.65);
-    backdrop-filter:blur(8px);
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.65);
+  backdrop-filter:blur(8px);
+  z-index:0;
 }
 
+/* central container that never disappears to avoid white transitions */
 .container{
-    position:relative;
-    z-index:1;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
+  position:relative;
+  z-index:1;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
 }
 
+/* login card */
 .login-card{
-    width:100%;
-    max-width:450px;
-    background:rgba(255,255,255,.08);
-    backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:25px;
-    padding:35px;
-    color:#fff;
-    box-shadow:0 20px 40px rgba(0,0,0,.35);
+  width:100%;
+  max-width:450px;
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:28px;
+  box-shadow:0 20px 40px rgba(0,0,0,.35);
+  text-align:center;
 }
 
-.logo{
-    text-align:center;
-    font-size:60px;
-    margin-bottom:10px;
-}
-
-.title{
-    text-align:center;
-    font-size:30px;
-    font-weight:700;
-    color:#d4af37;
-}
-
-.subtitle{
-    text-align:center;
-    margin-top:10px;
-    color:#e2e8f0;
-    font-size:15px;
-}
-
-.input-group{
-    margin-top:20px;
-}
-
-label{
-    display:block;
-    margin-bottom:8px;
-    color:#f8fafc;
-}
-
+/* simple visual styles */
+.logo{font-size:56px;margin-bottom:8px}
+.title{font-size:28px;font-weight:700;color:#d4af37}
+.subtitle{margin-top:8px;color:#e2e8f0;font-size:14px}
+.input-group{margin-top:18px;text-align:left}
+label{display:block;margin-bottom:6px;color:#f8fafc;font-size:13px}
 input{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    outline:none;
-    background:rgba(255,255,255,.12);
-    color:#fff;
-    font-size:15px;
+  width:100%;padding:12px;border:none;border-radius:10px;background:rgba(255,255,255,.09);color:#fff;font-size:14px;outline:none;
 }
-
-input::placeholder{
-    color:#cbd5e1;
-}
-
+input::placeholder{color:#cbd5e1}
 button{
-    width:100%;
-    margin-top:25px;
-    padding:15px;
-    border:none;
-    border-radius:12px;
-    background:#d4af37;
-    color:#0f172a;
-    font-weight:700;
-    font-size:16px;
-    cursor:pointer;
-    transition:.3s;
+  width:100%;margin-top:20px;padding:12px;border:none;border-radius:10px;background:#d4af37;color:#0f172a;font-weight:700;cursor:pointer;
+}
+.error{color:#ffb4b4;margin-top:12px;text-align:center;display:none;font-size:13px}
+
+/* iframe container (hidden until login) */
+.form-frame{
+  display:none; /* shown after successful login */
+  width:100%;
+  max-width:1100px;
+  height:calc(100vh - 48px);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 20px 40px rgba(0,0,0,.35);
+  background:transparent;
 }
 
-button:hover{
-    transform:translateY(-2px);
+/* iframe itself fills container, Google Form will render inside */
+.form-frame iframe{
+  width:100%;
+  height:100%;
+  border:0;
+  background:transparent;
 }
 
-.error{
-    color:#ffb4b4;
-    margin-top:15px;
-    text-align:center;
-    display:none;
-}
-
-.portal{
-    display:none;
-    position:relative;
-    z-index:2;
-    width:100%;
-    background:white;
-    min-height:100vh;
-}
-
-.portal-header{
-    background:#0f172a;
-    color:white;
-    padding:20px;
-    text-align:center;
-}
-
-.portal-header h1{
-    color:#d4af37;
-}
-
-iframe{
-    width:100%;
-    border:none;
-    height:2200px;
+/* keep layout responsive */
+@media (max-width:800px){
+  .form-frame{height:calc(100vh - 40px);max-width:100%}
+  .login-card{padding:18px}
 }
 </style>
-
 </head>
-
 <body>
+  <div class="container">
+    <!-- Login card remains the only card before login -->
+    <div class="login-card" id="loginCard" aria-hidden="false">
+      <div class="logo">📚</div>
+      <div class="title">Kulshar Library</div>
+      <div class="subtitle">Book Entry Portal — Authorized Library Staff Only</div>
 
-<div class="container" id="loginPage">
+      <div class="input-group">
+        <label for="mobile">Mobile</label>
+        <input id="mobile" type="tel" placeholder="Enter mobile number" inputmode="numeric" />
+      </div>
 
-```
-<div class="login-card">
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="Enter password" />
+      </div>
 
-    <div class="logo">📚</div>
+      <button id="loginBtn" type="button">🔓 Unlock Portal</button>
 
-    <div class="title">
-        Kulshar Library
+      <div class="error" id="errorMsg">You are not authorized to access this portal. Please check your credentials.</div>
     </div>
 
-    <div class="subtitle">
-        Book Entry Portal<br>
-        Authorized Library Staff Only
+    <!-- iframe wrapper: kept inside same container to avoid full-page repaint/white flash -->
+    <div class="form-frame" id="formFrame" aria-hidden="true">
+      <iframe id="googleForm" src="" title="Library Entry Form" loading="lazy"></iframe>
     </div>
-
-    <div class="input-group">
-        <label>Mobile Number</label>
-        <input
-            type="tel"
-            id="mobile"
-            placeholder="Enter mobile number">
-    </div>
-
-    <div class="input-group">
-        <label>Password</label>
-        <input
-            type="password"
-            id="password"
-            placeholder="Enter password">
-    </div>
-
-    <button onclick="login()">
-        🔓 Unlock Portal
-    </button>
-
-    <div class="error" id="errorMsg">
-        Invalid mobile number or password.
-    </div>
-
-</div>
-```
-
-</div>
-
-<div class="portal" id="portal">
-
-```
-<div class="portal-header">
-    <h1>📚 Kulshar Library</h1>
-    <p>Book Entry Management Portal</p>
-</div>
-
-<iframe
-    src="https://docs.google.com/forms/d/e/1FAIpQLSfv9TXExX3iUQ9ZmQyu7GwRkolUV4kOOiYGeMauvaZzcf2YJg/viewform?embedded=true">
-</iframe>
-```
-
-</div>
+  </div>
 
 <script>
 const users = [
-  {
-    mobile: "7219638796",
-    password: "Abdullah",
-    role: "Admin"
-  },
-  {
-    mobile: "8874311542",
-    password: "Zubair",
-    role: "Librarian"
-  }
+  { mobile: "7219638796", password: "Abdullah", role: "Admin" },
+  { mobile: "8874311542", password: "Zubair", role: "Librarian" }
 ];
 
-function login() {
+const loginBtn = document.getElementById('loginBtn');
+const errorMsg = document.getElementById('errorMsg');
+const loginCard = document.getElementById('loginCard');
+const formFrame = document.getElementById('formFrame');
+const googleForm = document.getElementById('googleForm');
 
-  const mobile =
-    document.getElementById("mobile").value.trim();
+function showError(show){
+  errorMsg.style.display = show ? 'block' : 'none';
+}
 
-  const password =
-    document.getElementById("password").value.trim();
+loginBtn.addEventListener('click', login);
+document.getElementById('mobile').addEventListener('input', ()=>showError(false));
+document.getElementById('password').addEventListener('input', ()=>showError(false));
 
-  const user = users.find(
-    u =>
-      u.mobile === mobile &&
-      u.password === password
-  );
+function login(){
+  const mobile = document.getElementById('mobile').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const user = users.find(u => u.mobile === mobile && u.password === password);
 
-  if (user) {
-
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("portal").style.display = "block";
-
-    console.log("Logged in as:", user.role);
-
-  } else {
-
-    document.getElementById("errorMsg").style.display = "block";
+  if(!user){
+    showError(true);
+    return;
   }
+
+  // On success: hide only the login card and reveal the form iframe.
+  // Keep the same background/blur overlay and avoid any page-white transitions.
+  loginCard.style.display = 'none';
+  formFrame.style.display = 'block';
+  formFrame.setAttribute('aria-hidden','false');
+
+  // Load the embedded Google Form only after successful auth (prevents preloading/white flashes)
+  googleForm.src = 'https://docs.google.com/forms/d/e/1FAIpQLSfv9TXExX3iUQ9ZmQyu7GwRkolUV4kOOiYGeMauvaZzcf2YJg/viewform?embedded=true';
 }
 </script>
-
 </body>
 </html>
+<!-- ...existing code... -->
