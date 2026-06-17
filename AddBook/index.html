@@ -9,103 +9,223 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* Layout & background */
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
-html,body{height:100%}
-body{
-  min-height:100vh;
-  background:url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1600') center/cover no-repeat;
-  position:relative;
-  color:#fff;
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:'Cairo',sans-serif;
 }
 
-/* dark blur overlay that remains visible before/after login */
-body::before{
+html,body{
+  height:100%;
+  overflow:hidden;
+}
+
+/* 🎨 Animated dark gradient background */
+body{
+  min-height:100vh;
+  background: linear-gradient(-45deg,#0f172a,#1e293b,#0b1220,#111827);
+  background-size:400% 400%;
+  animation: gradientMove 12s ease infinite;
+  color:#fff;
+  position:relative;
+}
+
+/* moving glow blobs */
+body::before,
+body::after{
   content:"";
   position:fixed;
-  inset:0;
-  background:rgba(15,23,42,.65);
-  backdrop-filter:blur(8px);
+  width:400px;
+  height:400px;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:.35;
   z-index:0;
 }
 
-/* central container that never disappears to avoid white transitions */
+body::before{
+  background:#d4af37;
+  top:-120px;
+  left:-120px;
+}
+
+body::after{
+  background:#60a5fa;
+  bottom:-150px;
+  right:-150px;
+}
+
+/* overlay depth */
+body::after{
+  mix-blend-mode:screen;
+}
+
+/* container */
 .container{
   position:relative;
   z-index:1;
-  min-height:100vh;
+  height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:24px;
+  padding:16px;
 }
 
-/* login card */
+/* 💎 glass card */
 .login-card{
   width:100%;
-  max-width:450px;
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;
-  padding:28px;
-  box-shadow:0 20px 40px rgba(0,0,0,.35);
+  max-width:460px;
+  padding:32px;
+  border-radius:22px;
+
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(18px);
+
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:
+    0 10px 40px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
   text-align:center;
+
+  transform:translateY(0);
+  animation: floatCard 4s ease-in-out infinite;
 }
 
-/* simple visual styles */
-.logo{font-size:56px;margin-bottom:8px}
-.title{font-size:28px;font-weight:700;color:#d4af37}
-.subtitle{margin-top:8px;color:#e2e8f0;font-size:14px}
-.input-group{margin-top:18px;text-align:left}
-label{display:block;margin-bottom:6px;color:#f8fafc;font-size:13px}
+/* icon */
+.logo{
+  font-size:60px;
+  margin-bottom:10px;
+  filter:drop-shadow(0 10px 20px rgba(0,0,0,.4));
+}
+
+.title{
+  font-size:30px;
+  font-weight:800;
+  color:#f5d36a;
+  letter-spacing:1px;
+}
+
+.subtitle{
+  margin-top:8px;
+  font-size:13px;
+  color:#cbd5e1;
+}
+
+/* inputs */
+.input-group{
+  margin-top:18px;
+  text-align:left;
+}
+
+label{
+  font-size:12px;
+  color:#e2e8f0;
+}
+
 input{
-  width:100%;padding:12px;border:none;border-radius:10px;background:rgba(255,255,255,.09);color:#fff;font-size:14px;outline:none;
-}
-input::placeholder{color:#cbd5e1}
-button{
-  width:100%;margin-top:20px;padding:12px;border:none;border-radius:10px;background:#d4af37;color:#0f172a;font-weight:700;cursor:pointer;
-}
-.error{color:#ffb4b4;margin-top:12px;text-align:center;display:none;font-size:13px}
-
-/* iframe container (hidden until login) */
-/* keep overflow:hidden so we can clip the native iframe scrollbar */
-.form-frame{
-  display:none; /* shown after successful login */
   width:100%;
-  max-width:1100px;
-  height:calc(100vh - 48px);
+  padding:12px 14px;
+  margin-top:6px;
+
   border-radius:12px;
-  overflow:hidden; /* IMPORTANT: clip iframe overflow (hides native scrollbar) */
-  box-shadow:0 20px 40px rgba(0,0,0,.35);
-  background:transparent;
+  border:1px solid rgba(255,255,255,.12);
+
+  background:rgba(255,255,255,.07);
+  color:#fff;
+
+  outline:none;
+  transition:.3s;
 }
 
-/* iframe itself fills container, Google Form will render inside */
-/* We extend the iframe slightly and shift it so its native scrollbar sits outside the visible area.
-   We also apply a CSS filter to darken the embedded form (works despite cross-origin).
-   Note: filter inverts/adjusts all content inside iframe; images/icons may look different. */
+input:focus{
+  border-color:#d4af37;
+  box-shadow:0 0 0 3px rgba(212,175,55,.2);
+}
+
+/* button */
+button{
+  width:100%;
+  margin-top:20px;
+  padding:12px;
+
+  border:none;
+  border-radius:12px;
+
+  background:linear-gradient(135deg,#d4af37,#f5d36a);
+  color:#0f172a;
+
+  font-weight:800;
+  cursor:pointer;
+
+  transition:.3s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(212,175,55,.25);
+}
+
+/* error */
+.error{
+  margin-top:12px;
+  font-size:13px;
+  color:#fca5a5;
+  display:none;
+}
+
+/* 📱 iframe panel */
+.form-frame{
+  display:none;
+  width:100%;
+  max-width:1200px;
+  height:95vh;
+  border-radius:18px;
+  overflow:hidden;
+  position:relative;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
 .form-frame iframe{
-  width:calc(100% + 18px);  /* extend to hide vertical scrollbar inside clipped parent */
+  width:100%;
   height:100%;
   border:0;
-  background:transparent;
-  margin-right:-18px;       /* shift so scrollbar is clipped by parent overflow:hidden */
-  border-radius:12px;
-  filter: invert(0.92) hue-rotate(180deg) brightness(0.95) saturate(0.85);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  display:block;
+  /* keep style but avoid weird clipping */
+  filter: invert(0.92) hue-rotate(180deg) brightness(0.95);
 }
 
-/* keep layout responsive */
-@media (max-width:800px){
-  .form-frame{height:calc(100vh - 40px);max-width:100%}
-  .login-card{padding:18px}
-  .form-frame iframe{width:calc(100% + 12px); margin-right:-12px;}
+
+/* animations */
+@keyframes gradientMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+@keyframes floatCard{
+  0%,100%{transform:translateY(0px)}
+  50%{transform:translateY(-6px)}
+}
+
+/* responsive */
+@media (max-width:768px){
+  .login-card{
+    padding:22px;
+  }
+
+  .form-frame{
+    height:100vh;
+    border-radius:0;
+  }
 }
 </style>
 </head>
+
+
+
 <body>
   <div class="container">
     <!-- Login card remains the only card before login -->
