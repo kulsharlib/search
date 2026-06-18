@@ -1,0 +1,300 @@
+<!-- ...existing code... -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>تحديث قاعدة البيانات لمكتبة الكلية</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:'Cairo',sans-serif;
+}
+
+html,body{
+  height:100%;
+  overflow:hidden;
+}
+
+/* 🎨 Animated dark gradient background */
+body{
+  min-height:100dvh;
+  background: linear-gradient(-45deg,#0f172a,#1e293b,#0b1220,#111827);
+  background-size:400% 400%;
+  animation: gradientMove 12s ease infinite;
+  color:#fff;
+  position:relative;
+}
+
+/* moving glow blobs */
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  width:400px;
+  height:400px;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:.35;
+  z-index:0;
+}
+
+body::before{
+  background:#d4af37;
+  top:-120px;
+  left:-120px;
+}
+
+body::after{
+  background:#60a5fa;
+  bottom:-150px;
+  right:-150px;
+}
+
+/* overlay depth */
+body::after{
+  mix-blend-mode:screen;
+}
+
+/* container */
+.container{
+  position:relative;
+  z-index:1;
+  height:100dvh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+
+/* 💎 glass card */
+.login-card{
+  width:100%;
+  max-width:460px;
+  padding:32px;
+  border-radius:22px;
+
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(18px);
+
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:
+    0 10px 40px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
+  text-align:center;
+
+  transform:translateY(0);
+  animation: floatCard 4s ease-in-out infinite;
+}
+
+/* icon */
+.logo{
+  font-size:60px;
+  margin-bottom:10px;
+  filter:drop-shadow(0 10px 20px rgba(0,0,0,.4));
+}
+
+.title{
+  font-size:30px;
+  font-weight:800;
+  color:#f5d36a;
+  letter-spacing:1px;
+}
+
+.subtitle{
+  margin-top:8px;
+  font-size:13px;
+  color:#cbd5e1;
+}
+
+/* inputs */
+.input-group{
+  margin-top:18px;
+  text-align:left;
+}
+
+label{
+  font-size:12px;
+  color:#e2e8f0;
+}
+
+input{
+  width:100%;
+  padding:12px 14px;
+  margin-top:6px;
+
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
+
+  background:rgba(255,255,255,.07);
+  color:#fff;
+
+  outline:none;
+  transition:.3s;
+}
+
+input:focus{
+  border-color:#d4af37;
+  box-shadow:0 0 0 3px rgba(212,175,55,.2);
+}
+
+/* button */
+button{
+  width:100%;
+  margin-top:20px;
+  padding:12px;
+
+  border:none;
+  border-radius:12px;
+
+  background:linear-gradient(135deg,#d4af37,#f5d36a);
+  color:#0f172a;
+
+  font-weight:800;
+  cursor:pointer;
+
+  transition:.3s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(212,175,55,.25);
+}
+
+/* error */
+.error{
+  margin-top:12px;
+  font-size:13px;
+  color:#fca5a5;
+  display:none;
+}
+
+/* 📱 iframe panel */
+.form-frame{
+  display:none;
+  width:100%;
+  max-width:1200px;
+  height:95dvh;
+  border-radius:18px;
+  overflow:hidden;
+  position:relative;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
+.form-frame iframe{
+  width:100%;
+  height:100%;
+  border:0;
+  /* keep style but avoid weird clipping */
+  filter: invert(0.92) hue-rotate(180deg) brightness(0.95);
+}
+
+
+/* animations */
+@keyframes gradientMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+@keyframes floatCard{
+  0%,100%{transform:translateY(0px)}
+  50%{transform:translateY(-6px)}
+}
+
+/* responsive */
+@media (max-width:768px){
+  .login-card{
+    padding:22px;
+  }
+
+  .form-frame{
+    height:100dvh;
+    border-radius:0;
+  }
+}
+</style>
+</head>
+
+
+
+<body>
+  <div class="container">
+    <!-- Login card remains the only card before login -->
+    <div class="login-card" id="loginCard" aria-hidden="false">
+      <div class="logo">📚</div>
+      <div class="title">Kulshar Library</div>
+      <div class="subtitle">Book Entry Portal \n Authorized Library Staff Only</div>
+
+      <div class="input-group">
+        <label for="mobile">Mobile</label>
+        <input id="mobile" type="tel" placeholder="Enter mobile number" inputmode="numeric" />
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="Enter password" />
+      </div>
+
+      <button id="loginBtn" type="button">🔓 Unlock Portal</button>
+
+      <div class="error" id="errorMsg">You are not authorized to access this portal. Please check your credentials.</div>
+    </div>
+
+    <!-- iframe wrapper: kept inside same container to avoid full-page repaint/white flash -->
+    <div class="form-frame" id="formFrame" aria-hidden="true">
+      <iframe id="googleForm" src="" title="Library Entry Form" loading="lazy" allow="camera;microphone"></iframe>
+    </div>
+  </div>
+
+<script>
+const users = [
+  { mobile: "7219638796", password: "Abdullah", role: "Admin" },
+  { mobile: "8874311542", password: "Zubair", role: "Librarian" }
+];
+
+const loginBtn = document.getElementById('loginBtn');
+const errorMsg = document.getElementById('errorMsg');
+const loginCard = document.getElementById('loginCard');
+const formFrame = document.getElementById('formFrame');
+const googleForm = document.getElementById('googleForm');
+
+function showError(show){
+  errorMsg.style.display = show ? 'block' : 'none';
+}
+
+loginBtn.addEventListener('click', login);
+document.getElementById('mobile').addEventListener('input', ()=>showError(false));
+document.getElementById('password').addEventListener('input', ()=>showError(false));
+
+function login(){
+  const mobile = document.getElementById('mobile').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const user = users.find(u => u.mobile === mobile && u.password === password);
+
+  if(!user){
+    showError(true);
+    return;
+  }
+
+  // On success: hide only the login card and reveal the form iframe.
+  // Keep the same background/blur overlay and avoid any page-white transitions.
+  loginCard.style.display = 'none';
+  formFrame.style.display = 'block';
+  formFrame.setAttribute('aria-hidden','false');
+
+  // Load the embedded Google Form only after successful auth (prevents preloading/white flashes)
+  googleForm.src = 'https://docs.google.com/forms/d/e/1FAIpQLSfv9TXExX3iUQ9ZmQyu7GwRkolUV4kOOiYGeMauvaZzcf2YJg/viewform?embedded=true';
+}
+</script>
+</body>
+</html>
+<!-- ...existing code... -->
