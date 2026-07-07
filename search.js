@@ -36,7 +36,11 @@ async function performSearch() {
       const data = await response.json();
 
       const matched = data.filter(book =>
-        book[1]?.includes(query) || book[2]?.includes(query)
+        book[1]?.includes(query) ||   // Book Name
+        book[2]?.includes(query) ||   // Author
+        book[3]?.includes(query) ||   // Editor
+        book[5]?.includes(query) ||   // Publisher
+        book[7]?.includes(query)      // Accession Number
       );
 
       if (matched.length > 0) {
